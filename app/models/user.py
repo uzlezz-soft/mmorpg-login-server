@@ -1,3 +1,4 @@
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped
 from app.database import Base
 from uuid import uuid4, UUID
@@ -12,4 +13,5 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column()
 
     ban_id: Mapped[Optional[int]] = mapped_column()
+    online_on_server: Mapped[Optional[UUID]] = mapped_column()#ForeignKey('servers.id'))
     playing: Mapped[bool] = mapped_column(default=False)

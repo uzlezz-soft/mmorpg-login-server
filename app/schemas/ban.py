@@ -6,7 +6,8 @@ from uuid import UUID
 class Ban(BaseModel):
     username: str
     reason: str
-    is_perma_ban: bool
+    perma_ban: bool
+    date: datetime
 
 class BanList(BaseModel):
     bans: List[Ban]

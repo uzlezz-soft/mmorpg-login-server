@@ -1,5 +1,5 @@
-from app.models.bans import Ban
-import app.schemas.bans as schema
+from app.models.ban import Ban
+import app.schemas.ban as schema
 from app.crud.user import get_user_by_name
 from sqlalchemy.orm import Session
 from typing import List
