@@ -3,19 +3,19 @@ from typing import List
 from datetime import datetime
 from uuid import UUID
 
-class Ban(BaseModel):
+class BanRecord(BaseModel):
     username: str
     reason: str
     perma_ban: bool
     date: datetime
 
 class BanList(BaseModel):
-    bans: List[Ban]
+    bans: List[BanRecord]
 
-class BanNotification(Ban):
+class BanNotification(BanRecord):
     banned_til: datetime | None
 
-class BanRecord(BaseModel):
+class FullBanRecord(BaseModel):
     user_id: UUID
     reason: str
     date: datetime

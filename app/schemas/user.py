@@ -8,7 +8,7 @@ class TokenData(BaseModel):
     username: str | None = None
 
 class UserBase(BaseModel):
-    username: str = Field(min_length=3, max_length=16)
+    username: str = Field(min_length=3, max_length=16, regex=r'^[a-zA-Z0-9_-]+$')
 
 class UserCreate(UserBase):
     email: EmailStr
@@ -16,3 +16,10 @@ class UserCreate(UserBase):
 
 class UserLogin(UserBase):
     password: str
+
+class ServerJoinRequest(BaseModel):
+    server_ip: str
+    server_port: int
+
+class SessionToken(BaseModel):
+    session: str
