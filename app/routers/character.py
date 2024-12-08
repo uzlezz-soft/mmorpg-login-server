@@ -9,7 +9,7 @@ from app.utils.security import validate_trusted_ip
 router = APIRouter(prefix="/character", tags=["character"])
 
 @router.post('/create')
-async def create_c(data: CharacterCreate, user = get_current_user(), db: Session = Depends(get_db)):
+async def create_c(data: CharacterCreate, user = Depends(get_current_user), db: Session = Depends(get_db)):
     result = create_character(db, data, user.id)
     if result == None:
         raise HTTPException(status_code=416, detail='Character limit exceeded')
@@ -17,7 +17,7 @@ async def create_c(data: CharacterCreate, user = get_current_user(), db: Session
         raise HTTPException(status_code=400, detail='Character with that name already exists')
 
 @router.get('/my', response_model=UserCharacterList)
-async def my_c(user = get_current_user(), db: Session = Depends(get_db)):
+async def my_c(user = Depends(get_current_user), db: Session = Depends(get_db)):
     return get_user_characters(db, user.id)
 
 @router.post('/user', response_model=ServerCharacterList, dependencies=[Depends(validate_trusted_ip)])
@@ -28,9 +28,13 @@ async def of_user_s(data: ServerCharacterLoadRequest, request: Request, db: Sess
     return result
 
 @router.delete('/delete')
-async def delete_c(data: CharacterDelete, user = get_current_user(), db: Session = Depends(get_db)):
-    if not delete_user_character(db, data, user.id):
+async def delete_c(data: CharacterDelete, user = Depends(get_current_user), db: Session = Depends(get_db)):
+    result = delete_user_character(db, data, user.id)
+    if result == None:
         raise HTTPException(status_code=400)
+    if result == False:
+        # user is online on a server
+        raise HTTPException(status_code=406)
 
 @router.post('/update', dependencies=[Depends(validate_trusted_ip)])
 async def update_s(data: CharactersUpdateRequest, request: Request, db: Session = Depends(get_db)):

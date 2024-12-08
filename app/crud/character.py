@@ -14,7 +14,7 @@ def get_character_by_name(db: Session, name: str) -> Character:
     return db.query(Character).filter(Character.name == name).first()
 
 def get_character_by_name_of_user(db: Session, name: str, user_id: UUID):
-    return db.query(Character).filter(Character,user_id == user_id and Character.name == name).first()
+    return db.query(Character).filter(Character.user_id == user_id).filter(Character.name == name).first()
 
 def add_character(db: Session, data: CharacterCreate, user_id: UUID) -> Character | None:
     db_character = Character(user_id=user_id, name=data.name, class_type=data.class_type)

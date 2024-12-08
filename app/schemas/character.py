@@ -22,7 +22,7 @@ class ServerCharacterRecord(CharacterRecord):
     inventory: list[dict]
     stats: list[dict]
 
-class ServerCharacterList(ServerCharacterRecord):
+class ServerCharacterList(BaseModel):
     characters: List[ServerCharacterRecord]
 
 class CharacterDelete(BaseModel):
@@ -31,6 +31,8 @@ class CharacterDelete(BaseModel):
 class CharacterUpdate(BaseModel):
     session_token: str
     id: UUID
+    level: int | None
+    experience: int | None
     inventory: list[dict] | None
     stats: list[dict] | None
 
