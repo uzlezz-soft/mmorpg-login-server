@@ -3,14 +3,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.services.server_service import *
 from app.schemas.server import *
-from uuid import UUID
-from app.config import settings
-
-async def validate_trusted_ip(request: Request):
-    ip = str(request.client.host)
-    print(f'Validate {ip} -> {ip in settings.SERVER_TRUSTED_IPS}')
-    if ip not in settings.SERVER_TRUSTED_IPS:
-        raise HTTPException(status_code=404)
+from app.utils.security import validate_trusted_ip
 
 router = APIRouter(prefix="/server", tags=["server"])
 

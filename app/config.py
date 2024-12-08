@@ -19,4 +19,6 @@ class Settings(BaseSettings):
     SERVER_TRUSTED_IPS: list = os.getenv('SERVER_TRUSTED_IPS', ["127.0.0.1"])
     USER_JOIN_REQUEST_TIMEOUT_SECONDS: int = os.getenv('USER_JOIN_REQUEST_TIMEOUT_SECONDS', 30)
 
+    MAX_CHARACTERS_PER_USER: int = os.getenv('MAX_CHARACTERS_PER_USER', 3)
+
 settings = Settings()

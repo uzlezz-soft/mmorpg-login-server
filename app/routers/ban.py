@@ -4,7 +4,7 @@ from app.database import get_db
 import app.schemas.ban as schema
 from app.services.ban_service import *
 
-router = APIRouter(prefix="/bans", tags=["ban"])
+router = APIRouter(prefix="/ban", tags=["ban"])
 
 @router.get('/all', response_model=schema.BanList)
 async def all(db: Session = Depends(get_db)):
