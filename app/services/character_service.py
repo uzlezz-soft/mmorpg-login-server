@@ -4,19 +4,23 @@ from app.models.user import User
 from app.schemas.character import *
 from app.crud.character import *
 from app.crud.server import get_server, get_server_by_ip
-from app.schemas.server import is_server_online
+from app.services.server_service import is_server_online
 from app.utils.jwt import validate_session_token
 from datetime import datetime, timezone
 from app.config import settings
 from uuid import UUID
 
-def create_character(db: Session, data: CharacterCreate, user_id: UUID) -> bool | None:
-    if len(get_characters_of_user(db, user_id)) >= settings.MAX_CHARACTERS_PER_USER:
+def create_character(db: Session, data: CharacterCreate, user: User) -> bool | None:
+    if user.online_on_server:
+        user_server = get_server(db, user.online_on_server)
+        if user_server and is_server_online(user_server) and user_server.players > 0:
+            raise RuntimeError('user is online on server')
+    if len(get_characters_of_user(db, user.id)) >= settings.MAX_CHARACTERS_PER_USER:
         return None
     character = get_character_by_name(db, data.name)
     if character:
         return False
-    add_character(db, data, user_id)
+    add_character(db, data, user.id)
     return True
 
 def get_user_characters(db: Session, user_id: UUID) -> UserCharacterList:

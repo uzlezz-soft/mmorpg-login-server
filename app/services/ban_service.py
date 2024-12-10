@@ -23,7 +23,7 @@ def notify_ban(db: Session, data: BanNotification) -> Ban:
 
 def is_user_banned(db: Session, user_id: UUID) -> bool:
     all_bans = get_bans_of_user(db, user_id)
-    if not all_bans or len(all_bans.bans) == 0:
+    if not all_bans or len(all_bans) == 0:
         return False
     
     # iterate in reversed in case of user being banned

@@ -102,7 +102,7 @@ def server_shutdown(db: Session, ip: str):
     server = crud.get_server_by_ip(db, ip)
     if not server:
         return False
-    server.last_heartbeat = datetime.now(timezone.now) - timedelta(seconds=settings.SERVER_HEARTBEAT_TIMEOUT_SECONDS + 1)
+    server.last_heartbeat = datetime.now(timezone.utc) - timedelta(seconds=settings.SERVER_HEARTBEAT_TIMEOUT_SECONDS + 1)
     server.players = 0
     crud.update_server(db, server)
     app.services.user_service.update_users_on_server_shutdown(db, server.ip)

@@ -10,7 +10,10 @@ router = APIRouter(prefix="/character", tags=["character"])
 
 @router.post('/create')
 async def create_c(data: CharacterCreate, user = Depends(get_current_user), db: Session = Depends(get_db)):
-    result = create_character(db, data, user.id)
+    try:
+        result = create_character(db, data, user)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
     if result == None:
         raise HTTPException(status_code=416, detail='Character limit exceeded')
     if result == False:
@@ -29,7 +32,7 @@ async def of_user_s(data: ServerCharacterLoadRequest, request: Request, db: Sess
 
 @router.delete('/delete')
 async def delete_c(data: CharacterDelete, user = Depends(get_current_user), db: Session = Depends(get_db)):
-    result = delete_user_character(db, data, user.id)
+    result = delete_user_character(db, data, user)
     if result == None:
         raise HTTPException(status_code=400)
     if result == False:

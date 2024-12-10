@@ -16,7 +16,13 @@ def add_ban(db: Session, data: schema.BanNotification) -> Ban | None:
     db_user = get_user_by_name(db, data.username)
     if not db_user:
         return None
-    db_ban = Ban(user_id=db_user.id, reason=data.reason, banned_til=UTC.localize(data.banned_til), perma_ban=data.is_perma_ban)
+    try:
+        banned_til = UTC.localize(data.banned_til)
+    except:
+        banned_til = data.banned_til
+    db_ban = Ban(user_id=db_user.id, reason=data.reason, banned_til=banned_til, perma_ban=data.perma_ban)
+    #if data.date:
+    #    db_ban.date = data.date
     db.add(db_ban)
     db.commit()
     db.refresh(db_ban)

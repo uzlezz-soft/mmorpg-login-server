@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 import app.schemas.ban as schema
 from app.services.ban_service import *
+from app.utils.security import validate_trusted_ip
 
 router = APIRouter(prefix="/ban", tags=["ban"])
 
@@ -17,7 +18,7 @@ async def all_of_users(username: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail='Unknown user')
     return bans
 
-@router.post('/notify', response_model=schema.BanRecord)
+@router.post('/notify', response_model=schema.BanRecord, dependencies=[Depends(validate_trusted_ip)])
 async def notify(notification: schema.BanNotification, db: Session = Depends(get_db)):
     ban = add_ban(db, notification)
     if not ban:
